@@ -1,0 +1,101 @@
+<odoo>
+    <record id="barbershop_appointment_view_list" model="ir.ui.view">
+        <field name="name">barbershop.appointment.list</field>
+        <field name="model">barbershop.appointment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="barber_id"/>
+                <field name="service_id"/>
+                <field name="date"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="barbershop_appointment_view_kanban" model="ir.ui.view">
+        <field name="name">barbershop.appointment.kanban</field>
+        <field name="model">barbershop.appointment</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="barber_id"/>
+                <field name="service_id"/>
+                <field name="date"/>
+                <field name="price"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="oe_partner_heading"><t t-esc="record.name.value"/></strong>
+                                <ul>
+                                    <li><strong>Cliente: </strong><field name="client_id"/></li>
+                                    <li><strong>Barbero: </strong><field name="barber_id"/></li>
+                                    <li><strong>Servicio: </strong><field name="service_id"/></li>
+                                    <li><strong>Fecha: </strong><field name="date"/></li>
+                                    <li>
+                                        <strong>Precio: </strong>
+                                        <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="barbershop_appointment_view_form" model="ir.ui.view">
+        <field name="name">barbershop.appointment.form</field>
+        <field name="model">barbershop.appointment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre de la cita"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="client_id" options="{'no_create': True}"/>
+                            <field name="barber_id" options="{'no_create': True}"/>
+                            <field name="service_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="barbershop_appointment_menu_action" model="ir.actions.act_window">
+        <field name="name">Citas</field>
+        <field name="res_model">barbershop.appointment</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <record id="barbershop_appointment_view_search" model="ir.ui.view">
+        <field name="name">barbershop.appointment.search</field>
+        <field name="model">barbershop.appointment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="barber_id"/>
+                <field name="date"/>
+                <filter string="Hoy" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Fecha" name="date" context="{'group_by': 'date'}"/>
+                    <filter string="Barbero" name="barber_id" context="{'group_by': 'barber_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

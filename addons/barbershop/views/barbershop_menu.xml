@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="barbershop_menu_root" name="Barbershop"/>
+
+    <menuitem id="barbershop_menu" name="Modules" parent="barbershop_menu_root">
+        <menuitem id="barbershop_client_menu" name="Clientes" action="barbershop_client_menu_action"/>
+        <menuitem id="barbershop_barber_menu" name="Barberos" action="barbershop_barber_menu_action"/>
+        <menuitem id="barbershop_service_menu" name="Servicios" action="barbershop_service_menu_action"/>
+        <menuitem id="barbershop_appointment_menu" name="Citas" action="barbershop_appointment_menu_action"/>
+    </menuitem>
+
+</odoo>

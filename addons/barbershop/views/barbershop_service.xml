@@ -1,0 +1,88 @@
+<odoo>
+    <record id="barbershop_service_view_list" model="ir.ui.view">
+        <field name="name">barbershop.service.list</field>
+        <field name="model">barbershop.service</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="duration"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="barbershop_service_view_kanban" model="ir.ui.view">
+        <field name="name">barbershop.service.kanban</field>
+        <field name="model">barbershop.service</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="price"/>
+                <field name="duration"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="oe_partner_heading"><t t-esc="record.name.value"/></strong>
+                                <ul>
+                                    <li>
+                                        <strong>Precio: </strong>
+                                        <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    </li>
+                                    <li>
+                                        <strong>Duración: </strong><t t-esc="record.duration.value"/> horas
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="barbershop_service_view_form" model="ir.ui.view">
+        <field name="name">barbershop.service.form</field>
+        <field name="model">barbershop.service</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del servicio"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group>
+                            <field name="duration"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="barbershop_service_menu_action" model="ir.actions.act_window">
+        <field name="name">Servicios</field>
+        <field name="res_model">barbershop.service</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <record id="barbershop_service_view_search" model="ir.ui.view">
+        <field name="name">barbershop.service.search</field>
+        <field name="model">barbershop.service</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Menor a 1 hora" name="short_duration" domain="[('duration', '&lt;', 1)]"/>
+                <filter string="Mayor a 1 hora" name="long_duration" domain="[('duration', '&gt;=', 1)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Duración" name="duration" context="{'group_by': 'duration'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>
