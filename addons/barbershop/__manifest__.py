@@ -14,6 +14,7 @@
         'views/barbershop_barber_view.xml',
         'views/barbershop_service.xml',
         'views/barbershop_appointment_view.xml',
+        'views/barbershop_vip_client_view.xml',
         'views/barbershop_menu.xml',
     ]
 }

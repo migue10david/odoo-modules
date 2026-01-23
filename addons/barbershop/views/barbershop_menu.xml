@@ -7,6 +7,6 @@
         <menuitem id="barbershop_barber_menu" name="Barberos" action="barbershop_barber_menu_action"/>
         <menuitem id="barbershop_service_menu" name="Servicios" action="barbershop_service_menu_action"/>
         <menuitem id="barbershop_appointment_menu" name="Citas" action="barbershop_appointment_menu_action"/>
+        <menuitem id="barbershop_vip_menu" name="Clientes VIP" action="action_vip_clients"/>
     </menuitem>
-
 </odoo>
