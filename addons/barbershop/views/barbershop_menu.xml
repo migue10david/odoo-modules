@@ -9,4 +9,9 @@
         <menuitem id="barbershop_appointment_menu" name="Citas" action="barbershop_appointment_menu_action"/>
         <menuitem id="barbershop_vip_menu" name="Clientes VIP" action="action_vip_clients"/>
     </menuitem>
+
+    <menuitem id="barbershop_menu_second" name="Accesorios" parent="barbershop_menu_root">
+        <menuitem id="barbershop_accessory_menu" name="Accesorios" action="barbershop_accessory_menu_action"/>
+    </menuitem>
+
 </odoo>
