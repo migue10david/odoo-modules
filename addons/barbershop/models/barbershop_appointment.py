@@ -10,3 +10,21 @@ class BarbershopAppointment(models.Model):
     service_id = fields.Many2one('barbershop.service', string='Servicio', required=True)
     date = fields.Date(string='Fecha', required=True)
     price = fields.Float(string='Precio', required=True, related='service_id.price')
+    state = fields.Selection([
+        ('draft', 'Borrador'),
+        ('confirmed', 'Confirmada'),
+        ('done', 'Realizada'),
+        ('cancel', 'Cancelada'),
+    ], string='Estado', default='draft', tracking=True)
+
+    def action_confirm(self):
+        self.state = 'confirmed'
+
+    def action_done(self):
+        self.state = 'done'
+
+    def action_cancel(self):
+        self.state = 'cancel'
+
+    def action_draft(self):
+        self.state = 'draft'
