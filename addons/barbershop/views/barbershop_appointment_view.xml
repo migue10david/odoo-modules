@@ -3,13 +3,14 @@
         <field name="name">barbershop.appointment.list</field>
         <field name="model">barbershop.appointment</field>
         <field name="arch" type="xml">
-            <list>
+            <list decoration-info="state == 'draft'" decoration-success="state == 'done'" decoration-warning="state == 'confirmed'" decoration-muted="state == 'cancel'">
                 <field name="name"/>
                 <field name="client_id"/>
                 <field name="barber_id"/>
                 <field name="service_id"/>
                 <field name="date"/>
                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'done'" decoration-warning="state == 'confirmed'" decoration-muted="state == 'cancel'"/>
             </list>
         </field>
     </record>
@@ -39,6 +40,7 @@
                                         <strong>Precio: </strong>
                                         <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </li>
+                                    <li><strong>Estado: </strong><field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'confirmed': 'warning', 'done': 'success', 'cancel': 'default'}}"/></li>
                                 </ul>
                             </div>
                         </div>
@@ -53,6 +55,13 @@
         <field name="model">barbershop.appointment</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_confirm" string="Confirmar" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_done" string="Finalizar" type="object" class="oe_highlight" invisible="state != 'confirmed'"/>
+                    <button name="action_draft" string="Volver a Borrador" type="object" invisible="state not in ['confirmed', 'cancel']"/>
+                    <button name="action_cancel" string="Cancelar" type="object" invisible="state not in ['draft', 'confirmed']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
@@ -91,9 +100,14 @@
                 <field name="barber_id"/>
                 <field name="date"/>
                 <filter string="Hoy" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Borrador" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmadas" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Realizadas" name="done" domain="[('state', '=', 'done')]"/>
                 <group expand="0" string="Group By">
                     <filter string="Fecha" name="date" context="{'group_by': 'date'}"/>
                     <filter string="Barbero" name="barber_id" context="{'group_by': 'barber_id'}"/>
+                    <filter string="Estado" name="state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>

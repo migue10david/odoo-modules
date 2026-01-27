@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de Pedidos de Envío -->
+<record id="view_shipping_order_list" model="ir.ui.view">
+    <field name="name">shipping.order.list</field>
+    <field name="model">shipping.order</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="name"/>
+            <field name="sender_id"/>
+            <field name="receiver_id"/>
+            <field name="transport_type"/>
+            <field name="total_weight_lb"/>
+            <field name="total_amount"/>
+            <field name="state"/>
+            <field name="create_date"/>
+        </list>
+    </field>
+</record>
+
+
+    <record id="view_shipping_order_form" model="ir.ui.view">
+    <field name="name">shipping.order.form</field>
+    <field name="model">shipping.order</field>
+    <field name="arch" type="xml">
+        <form string="Orden de Envío">
+            
+            <!-- Header -->
+            <header>
+                <field name="state" widget="statusbar"
+                       statusbar_visible="draft,confirmed,in_transit,delivered"/>
+                
+                <!-- <button name="action_confirm"
+                        type="object"
+                        string="Confirmar"
+                        class="btn-primary"
+                        states="draft"/>
+
+                <button name="action_cancel"
+                        type="object"
+                        string="Cancelar"
+                        class="btn-secondary"
+                        states="draft,confirmed"/> -->
+            </header>
+
+            <sheet>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+
+                <!-- Información general -->
+                <group>
+                    <group>
+                        <field name="sender_id"/>
+                        <field name="receiver_id"/>
+                    </group>
+                    <group>
+                        <field name="transport_type"/>
+                        <field name="rate_id" widget="many2one_list"/>
+                    </group>
+                </group>
+
+                <!-- Totales -->
+                <group string="Totales">
+                    <field name="total_weight_lb" readonly="1"/>
+                    <field name="total_products_value" readonly="1"/>
+                    <field name="total_amount" readonly="1"/>
+                </group>
+
+                <!-- Líneas -->
+                <notebook>
+                    <page string="Productos enviados">
+                        <field name="line_ids" context="{'default_currency_id': currency_id}">
+                            <list editable="bottom">
+                                <field name="product_id"
+                                    options="{'no_open': True}"
+                                    placeholder="Seleccione o cree un producto"/>
+                                <field name="quantity"/>
+                                <field name="weight_lb"/>
+                                <field name="declared_value"/>
+                            </list>
+                        </field>
+                    </page>
+
+
+                    <page string="Seguimiento">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </page>
+                </notebook>
+
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+    <!-- Acción para Pedidos -->
+    <record id="action_shipping_order" model="ir.actions.act_window">
+        <field name="name">Pedidos de Envío</field>
+        <field name="res_model">shipping.order</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
