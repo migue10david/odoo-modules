@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_shipping_rate,access_shipping_rate,model_shipping_rate,base.group_user,1,1,1,1
+access_shipping_order,access_shipping_order,model_shipping_order,base.group_user,1,1,1,1
+access_shipping_partner,access_shipping_partner,model_res_partner,base.group_user,1,1,1,1
+access_shipping_order_line,access_shipping_order_line,model_shipping_order_line,base.group_user,1,1,1,1

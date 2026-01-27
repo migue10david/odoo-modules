@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_shipping_order_line_list" model="ir.ui.view">
+    <field name="name">shipping.order.line.list</field>
+    <field name="model">shipping.order.line</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="order_id"/>
+            <field name="product_name"/>
+            <field name="quantity"/>
+            <field name="weight_lb"/>
+            <field name="declared_value"/>
+        </list>
+    </field>
+</record>
+
+<record id="view_shipping_order_line_form" model="ir.ui.view">
+    <field name="name">shipping.order.line.form</field>
+    <field name="model">shipping.order.line</field>
+    <field name="arch" type="xml">
+        <form string="Detalle del Envío">
+            <sheet>
+                <group>
+                    <field name="order_id"/>
+                    <field name="product_name"/>
+                    <field name="quantity"/>
+                    <field name="weight_lb"/>
+                    <field name="declared_value"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+</odoo>

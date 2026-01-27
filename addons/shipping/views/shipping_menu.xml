@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_shipping_root" name="Envío"/>
+    <menuitem id="menu_shipping_partner" name="Clientes" parent="menu_shipping_root">
+        <menuitem id="menu_shipping_cuban_receivers" name="Todos los clientes" action="action_shipping_partner"/>
+    </menuitem>
+
+    <menuitem
+        id="menu_shipping_rate_partner"
+        name="Tarifas"
+        parent="menu_shipping_root"
+    >
+        <menuitem id="menu_shipping_rate" name="Lista de tarifas" action="action_shipping_rate"/>
+    </menuitem>
+
+    <menuitem id="menu_shipping_order_partner" name="Pedidos" parent="menu_shipping_root">
+        <menuitem id="menu_shipping_order" name="Pedidos de Envío" action="action_shipping_order"/>
+    </menuitem>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_shipping_rate_list" model="ir.ui.view">
+        <field name="name">shipping.rate.list</field>
+        <field name="model">shipping.rate</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="transport_type"/>
+                <field name="price_per_lb"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_shipping_rate_form" model="ir.ui.view">
+        <field name="name">shipping.rate.form</field>
+        <field name="model">shipping.rate</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="transport_type"/>
+                        </group>
+                        <group>
+                            <field name="currency_id"/>
+                            <field name="price_per_lb"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shipping_rate" model="ir.actions.act_window">
+        <field name="name">Tarifas de Envío</field>
+        <field name="res_model">shipping.rate</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
