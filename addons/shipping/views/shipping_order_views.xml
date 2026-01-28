@@ -27,20 +27,37 @@
             
             <!-- Header -->
             <header>
-                <field name="state" widget="statusbar"
-                       statusbar_visible="draft,confirmed,in_transit,delivered"/>
-                
-                <!-- <button name="action_confirm"
-                        type="object"
-                        string="Confirmar"
-                        class="btn-primary"
-                        states="draft"/>
+               <field name="state"
+           widget="statusbar"
+           statusbar_visible="draft,confirmed,in_transit,delivered,cancelled"/>
 
-                <button name="action_cancel"
-                        type="object"
-                        string="Cancelar"
-                        class="btn-secondary"
-                        states="draft,confirmed"/> -->
+    <button name="action_draft"
+            string="Volver a Borrador"
+            type="object"
+            invisible="state not in ('confirmed', 'cancelled')"/>
+
+    <button name="action_confirm"
+            string="Confirmar"
+            type="object"
+            class="oe_highlight"
+            invisible="state != 'draft'"/>
+
+    <button name="action_in_transit"
+            string="En Tránsito"
+            type="object"
+            class="oe_highlight"
+            invisible="state != 'confirmed'"/>
+
+    <button name="action_delivered"
+            string="Entregado"
+            type="object"
+            class="oe_highlight"
+            invisible="state != 'in_transit'"/>
+
+    <button name="action_cancel"
+            string="Cancelar"
+            type="object"
+            invisible="state not in ('draft', 'confirmed')"/>
             </header>
 
             <sheet>

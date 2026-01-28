@@ -12,7 +12,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',      # Permisos de acceso
-        # 'data/ir_sequence_data.xml',         # Para que los pedidos sean ENV-001, ENV-002...
+        'data/shipping_order_sequence.xml',         # Para que los pedidos sean ENV-001, ENV-002...
         'views/shipping_partner_view.xml',
         'views/shipping_rate_views.xml',
         'views/shipping_order_views.xml',
