@@ -6,71 +6,18 @@ class ShippingOrder(models.Model):
     _description = 'Pedido de envío'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(
-    string='Referencia',
-    required=True,
-    readonly=True,
-    copy=False,
-    default='Nuevo'
-    )
-
-
-    sender_id = fields.Many2one(
-        'res.partner',
-        string='Cliente remitente',
-        required=True,
-        domain=[('is_cuban_receiver', '=', False)]
-    )
-
-    receiver_id = fields.Many2one(
-        'res.partner',
-        string='Receptor en Cuba',
-        required=True,
-        domain=[('is_cuban_receiver', '=', True)]
-    )
-
-    transport_type = fields.Selection([
-        ('air', 'Aéreo'),
-        ('sea', 'Marítimo'),
-    ], string='Tipo de transporte', required=True, related='rate_id.transport_type')
-
-    rate_id = fields.Many2one(
-        'shipping.rate',
-        string='Tarifa aplicada',
-        required=True
-    )
-
-    currency_id = fields.Many2one(
-        related='rate_id.currency_id',
-        store=True
-    )
-
-    line_ids = fields.One2many(
-        'shipping.order.line',
-        'order_id',
-        string='Productos enviados'
-    )
-
-    total_weight_lb = fields.Float(
-        string='Peso total (lb)',
-        compute='_compute_totals',
-        store=True
-    )
-
-    total_products_value = fields.Monetary(
-        string='Precio de los productos',
-        compute='_compute_totals',
-        store=True,
-        currency_field='currency_id'
-    )
-
-    total_amount = fields.Monetary(
-        string='Total a pagar',
-        compute='_compute_totals',
-        store=True,
-        currency_field='currency_id'
-    )
-
+    name = fields.Char(string='Referencia',required=True,readonly=True,copy=False,default='Nuevo')
+    sender_id = fields.Many2one('res.partner', string='Cliente remitente',required=True,domain=[('is_cuban_receiver', '=', False)])
+    receiver_id = fields.Many2one('res.partner',string='Receptor en Cuba',required=True, domain=[('is_cuban_receiver', '=', True)])
+    transport_type = fields.Selection([('air', 'Aéreo'),('sea', 'Marítimo'), ], string='Tipo de transporte', required=True, related='rate_id.transport_type')
+    rate_id = fields.Many2one('shipping.rate',string='Tarifa aplicada', required=True)
+    currency_id = fields.Many2one(related='rate_id.currency_id',store=True)
+    line_ids = fields.One2many('shipping.order.line','order_id', string='Productos enviados')
+    invoice_id = fields.Many2one('account.move',string='Factura',readonly=True,copy=False)
+    invoice_count = fields.Integer(compute='_compute_invoice_count')
+    total_weight_lb = fields.Float(string='Peso total (lb)',compute='_compute_totals',store=True)
+    total_products_value = fields.Monetary(string='Precio de los productos',compute='_compute_totals',store=True,currency_field='currency_id')
+    total_amount = fields.Monetary(string='Total a pagar',compute='_compute_totals',store=True,currency_field='currency_id')
     state = fields.Selection([
         ('draft', 'Borrador'),
         ('confirmed', 'Confirmado'),
@@ -87,6 +34,11 @@ class ShippingOrder(models.Model):
             order.total_products_value = total_price
             order.total_weight_lb = total_weight
             order.total_amount = total_weight * order.rate_id.price_per_lb + total_price
+
+    @api.depends('invoice_id')
+    def _compute_invoice_count(self):
+        for order in self:
+            order.invoice_count = 1 if order.invoice_id else 0
     
     @api.model
     def create(self, vals):
@@ -97,7 +49,29 @@ class ShippingOrder(models.Model):
         )
         return super().create(vals)
 
+    def _prepare_invoice(self): 
+        self.ensure_one()
 
+        if not self.sender_id:
+            raise UserError('Debe seleccionar un cliente remitente.')
+        invoice_lines = []
+
+        for line in self.line_ids:
+            invoice_lines.append((0, 0, {
+                'product_id': line.product_id.id,
+                'quantity': line.quantity,
+                'price_unit': self.total_amount,
+                'name': line.product_id.name,
+        }))
+
+        return {
+            'move_type': 'out_invoice',
+            'partner_id': self.sender_id.id,
+            'invoice_date': fields.Date.context_today(self),
+            'currency_id': self.currency_id.id,
+            'invoice_origin': self.name,
+            'invoice_line_ids': invoice_lines,
+    }
 
     def action_draft(self):
         for order in self:
@@ -105,9 +79,15 @@ class ShippingOrder(models.Model):
 
     def action_confirm(self):
         for order in self:
-            if not order.line_ids:
-                raise ValidationError('Debe agregar al menos un producto.')
-            order.state = 'confirmed'
+            if order.invoice_id:
+                continue
+
+        invoice_vals = order._prepare_invoice()
+        invoice = self.env['account.move'].create(invoice_vals)
+
+        order.invoice_id = invoice.id
+        order.state = 'confirmed'
+
 
     def action_in_transit(self):
         for order in self:
@@ -120,3 +100,15 @@ class ShippingOrder(models.Model):
     def action_cancel(self):
         for order in self:
             order.state = 'cancelled'
+
+    def action_view_invoice(self):
+        self.ensure_one()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Factura',
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': self.invoice_id.id,
+            'target': 'current',
+        }
