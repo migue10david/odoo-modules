@@ -58,6 +58,12 @@
             string="Cancelar"
             type="object"
             invisible="state not in ('draft', 'confirmed')"/>
+
+    <button name="action_view_invoice"
+                        type="object"
+                        string="Factura"
+                        icon="fa-file-text"
+                        invisible="invoice_count == 0"/>
             </header>
 
             <sheet>
